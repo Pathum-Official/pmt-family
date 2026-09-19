@@ -1,0 +1,2 @@
+# pmt-family
+USJP PMT Family Multi-Cohort Web Platform  A unified, low-cost multi-batch web platform for the PMT combination at the University of Sri Jayewardenepura (USJP). Combines a public PMT portfolio with a private, cohort-scoped student learning and coordination portal (LMS, past papers, fund tracking, anonymous feedback, and Google Drive resource integration). Built with Next.js, Firebase, Tailwind CSS, and Vercel.
