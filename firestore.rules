@@ -36,8 +36,8 @@ service cloud.firestore {
     // 1. USERS COLLECTION
     // ==========================================
     match /users/{userId} {
-      // Super Admin can read all users; Users can only read their own profile, but directory needs read access.
-      allow read: if isAuthenticated();
+      // Super Admin can read all users; Users can read all for directory; Public can read featured members.
+      allow read: if isAuthenticated() || resource.data.isFeaturedOnHome == true;
       
       // Allow users to create their own profile during registration
       allow create: if isAuthenticated() && request.auth.uid == userId;

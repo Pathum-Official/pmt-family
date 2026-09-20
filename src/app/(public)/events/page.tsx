@@ -146,9 +146,17 @@ export default function EventsPage() {
                     {evt.description}
                   </p>
                   
-                  <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                    View Details <ExternalLink className="w-4 h-4 ml-2" />
-                  </Button>
+                  {evt.link ? (
+                    <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all" asChild>
+                      <a href={evt.link} target="_blank" rel="noopener noreferrer">
+                        View Details <ExternalLink className="w-4 h-4 ml-2" />
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button variant="outline" className="w-full" disabled>
+                      View Details
+                    </Button>
+                  )}
                 </div>
               </motion.div>
             ))}

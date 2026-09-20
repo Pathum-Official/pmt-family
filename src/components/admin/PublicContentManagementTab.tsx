@@ -91,6 +91,7 @@ function EventsManager() {
   const [imageUrl, setImageUrl] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [link, setLink] = useState("");
 
   const fetchEvents = async () => {
     const q = query(collection(db, "events"), orderBy("createdAt", "desc"));
@@ -113,10 +114,11 @@ function EventsManager() {
         setLocation(target.location || "");
         setImageUrl(target.imageUrl || "");
         setDescription(target.description || "");
+        setLink(target.link || "");
         setSelectedFile(null);
       }
     } else {
-      setTitle(""); setDate(""); setLocation(""); setImageUrl(""); setDescription(""); setSelectedFile(null);
+      setTitle(""); setDate(""); setLocation(""); setImageUrl(""); setDescription(""); setLink(""); setSelectedFile(null);
     }
   }, [editId, events]);
 
@@ -131,17 +133,17 @@ function EventsManager() {
 
       if (editId) {
         await updateDoc(doc(db, "events", editId), {
-          title, date, location, imageUrl: finalImageUrl, description
+          title, date, location, imageUrl: finalImageUrl, description, link
         });
         toast.success("Event updated successfully");
         router.push("/admin?tab=public&subtab=events", { scroll: false });
       } else {
         await addDoc(collection(db, "events"), {
-          title, date, location, imageUrl: finalImageUrl, description,
+          title, date, location, imageUrl: finalImageUrl, description, link,
           createdAt: serverTimestamp()
         });
         toast.success("Event created successfully");
-        setTitle(""); setDate(""); setLocation(""); setImageUrl(""); setDescription(""); setSelectedFile(null);
+        setTitle(""); setDate(""); setLocation(""); setImageUrl(""); setDescription(""); setLink(""); setSelectedFile(null);
       }
       fetchEvents();
     } catch (error) {
@@ -200,6 +202,10 @@ function EventsManager() {
               disabled={!!selectedFile}
             />
           </div>
+          <div className="space-y-2">
+            <Label>Link (Optional, e.g. Registration URL)</Label>
+            <Input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://..." />
+          </div>
           <div className="space-y-2 md:col-span-2">
             <Label>Description</Label>
             <Textarea required value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Event details..." />
@@ -236,7 +242,9 @@ function EventsManager() {
                   <Edit className="w-4 h-4" />
                 </Button>
                 <AlertDialog>
-                  <AlertDialogTrigger render={<Button variant="ghost" size="icon" className="text-destructive"><Trash2 className="w-4 h-4" /></Button>} />
+                  <AlertDialogTrigger>
+                    <div className="inline-flex h-9 w-9 items-center justify-center rounded-md text-destructive hover:bg-accent cursor-pointer"><Trash2 className="w-4 h-4" /></div>
+                  </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>Delete Event?</AlertDialogTitle>
