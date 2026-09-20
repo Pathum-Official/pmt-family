@@ -1,0 +1,138 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==========================================
+    // HELPER FUNCTIONS
+    // ==========================================
+    
+    // Check if the user is signed in
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Fetch the user's document from the users collection
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    // Check if the user has one of the allowed roles
+    function hasRole(allowedRoles) {
+      return isAuthenticated() && (getUserData().role in allowedRoles);
+    }
+    
+    // Check if the user is a super_admin
+    function isSuperAdmin() {
+      return isAuthenticated() && getUserData().role == 'super_admin';
+    }
+    
+    // Check if the document belongs to the user's cohort (or if user is super admin)
+    function isUserCohort(targetCohortId) {
+      return isAuthenticated() && (getUserData().cohortId == targetCohortId || isSuperAdmin());
+    }
+
+    // ==========================================
+    // 1. USERS COLLECTION
+    // ==========================================
+    match /users/{userId} {
+      // Super Admin can read all users; Users can only read their own profile, but directory needs read access.
+      allow read: if isAuthenticated();
+      
+      // Allow users to create their own profile during registration
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Super Admin can update anything. 
+      // Reps can update users in their own cohort (as long as the target isn't a super_admin and they aren't making them a super_admin).
+      // Regular users can update their own profile EXCEPT for their role, status, and cohort.
+      allow update: if isSuperAdmin() || 
+                    (hasRole(['rep']) && resource.data.cohortId == getUserData().cohortId && resource.data.role != 'super_admin' && request.resource.data.role != 'super_admin') ||
+                    (request.auth.uid == userId && 
+                     !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'cohortId', 'status']));
+                     
+      allow delete: if isSuperAdmin() || (hasRole(['rep']) && resource.data.cohortId == getUserData().cohortId && resource.data.role != 'super_admin');
+    }
+
+    // ==========================================
+    // 2. CONTENT COLLECTIONS (Announcements, Resources, Lectures, Finances)
+    // ==========================================
+    
+    match /announcements/{docId} {
+      allow read: if isAuthenticated() && isUserCohort(resource.data.cohortId);
+      allow create, delete: if hasRole(['super_admin', 'rep', 'media_rep']);
+      allow update: if hasRole(['super_admin', 'rep', 'media_rep']) || 
+                    (isAuthenticated() && isUserCohort(resource.data.cohortId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['poll']));
+    }
+    
+    match /resources/{docId} {
+      allow read: if isAuthenticated() && isUserCohort(resource.data.cohortId);
+      allow write: if hasRole(['super_admin', 'rep', 'academic_rep']);
+    }
+    
+    match /lectures/{docId} {
+      allow read: if isAuthenticated() && isUserCohort(resource.data.cohortId);
+      allow write: if hasRole(['super_admin', 'rep', 'academic_rep']);
+    }
+    
+    match /transactions/{docId} { // Finances are stored in the 'transactions' collection
+      allow read: if isAuthenticated() && isUserCohort(resource.data.cohortId);
+      allow write: if hasRole(['super_admin', 'rep', 'treasurer']);
+    }
+
+    match /modules/{docId} {
+      allow read: if isAuthenticated() && isUserCohort(resource.data.cohortId);
+      allow write: if hasRole(['super_admin', 'rep', 'academic_rep']);
+    }
+
+    // ==========================================
+    // 3. COMPLAINTS (Feedback)
+    // ==========================================
+    match /complaints/{docId} {
+      // Any authenticated user can submit feedback
+      allow create: if isAuthenticated();
+      
+      // Only Super Admins and Reps can read, update (resolve), or delete feedback
+      // Furthermore, they can only access feedback for their specific cohort (unless they are super_admin)
+      allow read, update, delete: if hasRole(['super_admin', 'rep']) && isUserCohort(resource.data.cohortId);
+    }
+    // ==========================================
+    // 4. PUBLIC COLLECTIONS (Events, Gallery)
+    // ==========================================
+    match /events/{docId} {
+      allow read: if true;
+      allow write: if hasRole(['super_admin', 'rep', 'media_rep']);
+    }
+    
+    match /gallery/{docId} {
+      allow read: if true;
+      allow write: if hasRole(['super_admin', 'rep', 'media_rep']);
+    }
+    
+    // ==========================================
+    // 5. SYSTEM SETTINGS & METADATA
+    // ==========================================
+    match /hero_slides/{docId} {
+      allow read: if true;
+      allow write: if hasRole(['super_admin']);
+    }
+    
+    match /achievements/{docId} {
+      allow read: if true;
+      allow write: if hasRole(['super_admin', 'rep', 'media_rep']);
+    }
+
+    match /cohorts/{docId} {
+      allow read: if true;
+      allow write: if hasRole(['super_admin']);
+    }
+    match /combinations/{docId} {
+      allow read: if true; // Needed during registration
+      allow write: if hasRole(['super_admin', 'rep', 'media_rep']);
+    }
+    
+    match /settings/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if hasRole(['super_admin', 'rep', 'media_rep']);
+    }
+  }
+}
