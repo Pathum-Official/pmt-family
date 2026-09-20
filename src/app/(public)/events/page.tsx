@@ -18,6 +18,7 @@ interface CampusEvent {
   location: string;
   description: string;
   imageUrl?: string;
+  link?: string;
   createdAt?: any;
 }
 
@@ -147,11 +148,14 @@ export default function EventsPage() {
                   </p>
                   
                   {evt.link ? (
-                    <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all" asChild>
-                      <a href={evt.link} target="_blank" rel="noopener noreferrer">
-                        View Details <ExternalLink className="w-4 h-4 ml-2" />
-                      </a>
-                    </Button>
+                    <a 
+                      href={evt.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={buttonVariants({ variant: "outline" }) + " w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all"}
+                    >
+                      View Details <ExternalLink className="w-4 h-4 ml-2" />
+                    </a>
                   ) : (
                     <Button variant="outline" className="w-full" disabled>
                       View Details
