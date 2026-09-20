@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
@@ -74,9 +74,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
             {/* Mobile Nav */}
             <div className="md:hidden flex items-center">
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                <SheetTrigger asChild>
-                  <button className="p-2 -mr-2 text-foreground/80 hover:text-primary transition-colors"><Menu className="h-6 w-6" /></button>
-                </SheetTrigger>
+                <SheetTrigger render={<button className="p-2 -mr-2 text-foreground/80 hover:text-primary transition-colors"><Menu className="h-6 w-6" /></button>} />
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <SheetHeader>
                     <SheetTitle className="text-left text-2xl font-bold bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent mb-6">Menu</SheetTitle>
