@@ -139,7 +139,7 @@ export default function RegisterPage() {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Subject Combination</label>
-                <Select value={formData.combination} onValueChange={(val) => setFormData({...formData, combination: val})}>
+                <Select value={formData.combination || ''} onValueChange={(val) => setFormData({...formData, combination: val || ''})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select combination (Optional)" />
                   </SelectTrigger>

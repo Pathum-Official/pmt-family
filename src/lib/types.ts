@@ -7,7 +7,7 @@ export interface User {
   regNo?: string;
   cohortId: string;
   role: Role;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'banned';
   photoURL?: string;
   phone?: string;
   whatsapp?: string;

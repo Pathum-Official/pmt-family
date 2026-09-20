@@ -81,10 +81,10 @@ export function CombinationsManagementTab() {
         <h2 className="text-xl font-semibold tracking-tight">Manage Subject Combinations</h2>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm">
+          <DialogTrigger>
+            <div className="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-3 cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90">
               <Plus className="mr-2 h-4 w-4" /> Add Combination
-            </Button>
+            </div>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

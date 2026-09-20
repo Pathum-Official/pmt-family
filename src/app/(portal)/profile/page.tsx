@@ -210,7 +210,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="space-y-2">
                     <Label>Subject Combination</Label>
-                    <Select value={formData.combination} onValueChange={(val) => setFormData({...formData, combination: val})}>
+                    <Select value={formData.combination || ''} onValueChange={(val) => setFormData({...formData, combination: val || ''})}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select combination" />
                       </SelectTrigger>

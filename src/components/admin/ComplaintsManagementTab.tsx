@@ -179,10 +179,10 @@ export function ComplaintsManagementTab({ cohortId }: { cohortId: string }) {
                         </Button>
                       )}
                       <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="sm" className="text-destructive" onClick={(e) => e.stopPropagation()}>
+                        <AlertDialogTrigger>
+                          <div className="inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-accent text-destructive cursor-pointer" onClick={(e) => e.stopPropagation()}>
                             <Trash2 className="h-4 w-4" />
-                          </Button>
+                          </div>
                         </AlertDialogTrigger>
                         <AlertDialogContent onClick={(e) => e.stopPropagation()}>
                           <AlertDialogHeader>

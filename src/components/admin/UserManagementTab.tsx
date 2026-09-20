@@ -222,7 +222,7 @@ export function UserManagementTab() {
                       fill="#8884d8"
                       paddingAngle={2}
                       dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                     >
                       {pieData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -429,10 +429,10 @@ export function UserManagementTab() {
                             <Edit className="h-4 w-4 text-muted-foreground hover:text-primary" />
                           </Button>
                           <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm">
+                            <AlertDialogTrigger>
+                              <div className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground">
                                 <X className="h-4 w-4 text-destructive hover:text-red-700" />
-                              </Button>
+                              </div>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
@@ -502,7 +502,7 @@ export function UserManagementTab() {
               </div>
               <div className="space-y-2">
                 <Label>Combination</Label>
-                <Select value={editUser.combination || ''} onValueChange={(val) => setEditUser({...editUser, combination: val})}>
+                <Select value={editUser.combination || ''} onValueChange={(val) => setEditUser({...editUser, combination: val || undefined})}>
                   <SelectTrigger><SelectValue placeholder="Select Combination" /></SelectTrigger>
                   <SelectContent>
                     {combinations.map(c => (

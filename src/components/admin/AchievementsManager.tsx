@@ -100,7 +100,7 @@ export function AchievementsManager() {
           </div>
           <div className="space-y-2">
             <Label>Icon</Label>
-            <Select value={iconName} onValueChange={setIconName}>
+            <Select value={iconName} onValueChange={(val) => setIconName(val || '')}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Icon" />
               </SelectTrigger>
@@ -141,7 +141,9 @@ export function AchievementsManager() {
                   <Edit className="w-4 h-4" />
                 </Button>
                 <AlertDialog>
-                  <AlertDialogTrigger render={<Button variant="ghost" size="icon" className="text-destructive"><Trash2 className="w-4 h-4" /></Button>} />
+                  <AlertDialogTrigger>
+                    <Button variant="ghost" size="icon" className="text-destructive"><Trash2 className="w-4 h-4" /></Button>
+                  </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>Delete Achievement?</AlertDialogTitle>

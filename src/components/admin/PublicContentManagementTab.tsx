@@ -442,7 +442,7 @@ function GalleryManager() {
           </div>
           <div className="space-y-2 md:col-span-2">
             <Label>Visibility</Label>
-            <Select value={visibility} onValueChange={setVisibility}>
+            <Select value={visibility} onValueChange={(val) => setVisibility(val || '')}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
