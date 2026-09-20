@@ -57,7 +57,7 @@ export default function LoginPage() {
                 <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
               </div>
             </CardContent>
-            <CardFooter className="flex flex-col space-y-4">
+            <CardFooter className="flex flex-col space-y-4 pt-4 mt-2">
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>

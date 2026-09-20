@@ -18,7 +18,7 @@ const navItems = [
   { name: "Feedback", href: "/complaints", icon: MessageSquare },
 ];
 
-export function Sidebar({ className }: { className?: string }) {
+export function Sidebar({ className, onItemClick }: { className?: string, onItemClick?: () => void }) {
   const pathname = usePathname();
   const { user } = useAuth();
 
@@ -35,6 +35,7 @@ export function Sidebar({ className }: { className?: string }) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onItemClick}
               className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
                 isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -48,8 +49,9 @@ export function Sidebar({ className }: { className?: string }) {
         {user && ['rep', 'academic_rep', 'treasurer', 'media_rep', 'super_admin'].includes(user.role) && (
           <Link
             href="/admin"
+            onClick={onItemClick}
             className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors mt-4",
+              "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
               pathname.startsWith("/admin") ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >

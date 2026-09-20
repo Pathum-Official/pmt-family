@@ -21,6 +21,7 @@ export function Header() {
   const { user } = useAuth();
   const router = useRouter();
   const [cohorts, setCohorts] = useState<any[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchCohorts = async () => {
@@ -67,13 +68,15 @@ export function Header() {
   return (
     <header className="h-16 border-b flex items-center justify-between px-4 lg:px-8 bg-background sticky top-0 z-40">
       <div className="flex items-center gap-4 lg:hidden">
-        <Sheet>
-          <SheetTrigger render={<Button variant="ghost" size="icon" className="lg:hidden" />}>
-            <Menu className="h-5 w-5" />
+        <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden">
+              <Menu className="h-5 w-5" />
+            </Button>
           </SheetTrigger>
           <SheetContent side="left" className="p-0 w-64">
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-            <Sidebar />
+            <Sidebar onItemClick={() => setIsSidebarOpen(false)} />
           </SheetContent>
         </Sheet>
         <span className="font-bold text-lg text-primary">PMT Portal</span>

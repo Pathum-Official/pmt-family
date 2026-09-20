@@ -15,32 +15,37 @@ import {
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   const isActive = (path: string) => pathname === path;
 
-  const NavLinks = () => (
+  const NavLinks = ({ onClick }: { onClick?: () => void }) => (
     <>
       <Link 
         href="/" 
-        className={`text-sm font-medium transition-colors hover:text-primary ${isActive("/") ? "text-primary font-semibold" : "text-foreground/80"}`}
+        onClick={onClick}
+        className={`text-lg md:text-sm font-medium transition-colors hover:text-primary ${isActive("/") ? "text-primary font-semibold" : "text-foreground/80"}`}
       >
         Home
       </Link>
       <Link 
         href="/about" 
-        className={`text-sm font-medium transition-colors hover:text-primary ${isActive("/about") ? "text-primary font-semibold" : "text-foreground/80"}`}
+        onClick={onClick}
+        className={`text-lg md:text-sm font-medium transition-colors hover:text-primary ${isActive("/about") ? "text-primary font-semibold" : "text-foreground/80"}`}
       >
         About
       </Link>
       <Link 
         href="/events" 
-        className={`text-sm font-medium transition-colors hover:text-primary ${isActive("/events") ? "text-primary font-semibold" : "text-foreground/80"}`}
+        onClick={onClick}
+        className={`text-lg md:text-sm font-medium transition-colors hover:text-primary ${isActive("/events") ? "text-primary font-semibold" : "text-foreground/80"}`}
       >
         Events
       </Link>
       <Link 
         href="/gallery" 
-        className={`text-sm font-medium transition-colors hover:text-primary ${isActive("/gallery") ? "text-primary font-semibold" : "text-foreground/80"}`}
+        onClick={onClick}
+        className={`text-lg md:text-sm font-medium transition-colors hover:text-primary ${isActive("/gallery") ? "text-primary font-semibold" : "text-foreground/80"}`}
       >
         Gallery
       </Link>
@@ -68,20 +73,22 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
             
             {/* Mobile Nav */}
             <div className="md:hidden flex items-center">
-              <Sheet>
-                <SheetTrigger render={<button className="p-2 -mr-2 text-foreground/80 hover:text-primary transition-colors"><Menu className="h-6 w-6" /></button>} />
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                  <button className="p-2 -mr-2 text-foreground/80 hover:text-primary transition-colors"><Menu className="h-6 w-6" /></button>
+                </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <SheetHeader>
                     <SheetTitle className="text-left text-2xl font-bold bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent mb-6">Menu</SheetTitle>
                   </SheetHeader>
                   <div className="flex flex-col gap-6 mt-4">
-                    <nav className="flex flex-col gap-4 text-lg">
-                      <NavLinks />
+                    <nav className="flex flex-col gap-6">
+                      <NavLinks onClick={() => setIsOpen(false)} />
                     </nav>
                     <div className="h-px bg-border w-full my-2"></div>
                     <div className="flex flex-col gap-3">
-                      <Link href="/login" className={buttonVariants({ variant: "outline", className: "w-full justify-center" })}>Log In</Link>
-                      <Link href="/register" className={buttonVariants({ className: "w-full justify-center" })}>Register</Link>
+                      <Link href="/login" onClick={() => setIsOpen(false)} className={buttonVariants({ variant: "outline", className: "w-full justify-center" })}>Log In</Link>
+                      <Link href="/register" onClick={() => setIsOpen(false)} className={buttonVariants({ className: "w-full justify-center" })}>Register</Link>
                     </div>
                   </div>
                 </SheetContent>
